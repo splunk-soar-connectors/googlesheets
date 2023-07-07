@@ -1,9 +1,8 @@
-Publisher: Splunk
-
-App Version: 3.2.0
-Product Vendor: Google
-Product Name: Google Sheets
-Product Version Supported (regex): ".*"
+Publisher: Splunk\
+App Version: 3.2.0\
+Product Vendor: Google\
+Product Name: Google Sheets\
+Product Version Supported (regex): ".*"\
 This app allows various file manipulation actions to be performed on Google Sheets
 
 This app requires a pre-configured service account to operate. Please follow the procedure outlined below.
