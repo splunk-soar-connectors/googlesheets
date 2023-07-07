@@ -1,4 +1,5 @@
 Publisher: Splunk
+
 App Version: 3.2.0
 Product Vendor: Google
 Product Name: Google Sheets
