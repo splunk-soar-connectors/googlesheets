@@ -1,0 +1,127 @@
+<p>
+  This app requires a pre-configured service account to operate. Please follow
+  the procedure outlined below.
+</p>
+<h2>Step 1: Create a project</h2>
+<ol>
+  <li>
+    Go to&nbsp;<a href="https://console.developers.google.com" target="_blank"
+      >Google Cloud</a
+    >
+    and sign in as a super administrator. If it's your first time signing in to
+    the console, agree to the Terms of Service.
+  </li>
+  <li>
+    Click <strong>IAM &amp; Admin</strong>&nbsp;&gt;&nbsp;<strong
+      >Manage Resources</strong
+    >. You might have to click Menu first.
+  </li>
+  <li>
+    At the top, click <strong>Create Project</strong>&nbsp;and enter a project
+    name.
+  </li>
+  <li>
+    (Optional) To add the project to a folder, for <strong>Location</strong>,
+    click <strong>Browse</strong>, navigate to the folder, and click
+    <strong>Select</strong>.
+  </li>
+  <li>Click <strong>Create</strong>.</li>
+  <li>
+    By default, only the creator of the project has rights to manage the
+    project. To ensure the project can be maintained if the creator leaves the
+    organization, you should assign at least one other person the role of
+    Project Owner. For details, go to&nbsp;<a
+      href="https://cloud.google.com/iam/docs/granting-changing-revoking-access"
+      target="_blank"
+      >Manage access to projects, folders, and organizations</a
+    >.
+  </li>
+</ol>
+
+<h2>Step 2: Turn on the APIs for the service account</h2>
+<ol>
+  <li>
+    Go to&nbsp;<a href="https://console.cloud.google.com/" target="_blank"
+      >Google Cloud Console</a
+    >
+    and select the project you created above in Step:1 from the dropdown list on
+    the top.
+  </li>
+  <li>
+    Click
+    <strong>APIs & Services</strong>&nbsp;&gt;&nbsp;<strong>Library</strong>.
+    You might have to click Menu first.
+  </li>
+  <li>
+    For each API you require (below), click the API name and then Enable:
+    <ol>
+      <li>Google Sheets API</li>
+      <li>Identity and Access Management (IAM) API</li>
+      <li>Google Drive API</li>
+    </ol>
+  </li>
+  <p>
+    <strong>Tip:</strong>If you can't find the API, specify the API name in the
+    search box.
+  </p>
+</ol>
+
+<h2>Step 3: Create the service account</h2>
+
+<ol>
+  <li>
+    Click
+    <strong>APIs &amp; Services</strong
+    >&nbsp;&gt;&nbsp;<strong>Credentials</strong>. You might have to click Menu
+    first.
+  </li>
+  <li>
+    Click <strong>Create Credentials</strong>&nbsp;&gt;&nbsp;<strong
+      >Service account</strong
+    >.
+  </li>
+  <li>
+    For <strong>Service account name</strong>, enter a name for the service
+    account.
+  </li>
+  <li>
+    (Optional) For <strong>Service account description</strong>, enter a
+    description of the service account.
+  </li>
+  <li>Click <strong>Create and Continue</strong>.</li>
+  <li>Click <strong>Done</strong>&nbsp;&gt;&nbsp;<strong>Save</strong>.</li>
+  <li>
+    Select the service account you just created and note down the email ID.
+    <strong>
+      You'll need it later while creating an asset for the connector
+      (service_account_email).
+    </strong>
+  </li>
+  <li>
+    At the top, click <strong>Keys</strong>&nbsp;&gt;&nbsp;<strong
+      >Add Key</strong
+    >&nbsp;&gt;&nbsp;<strong>Create new key</strong>.
+  </li>
+  <li>
+    Make sure the key type is set to <strong>JSON</strong> and click
+    <strong>Create</strong>.
+    <p>
+      You'll get a message that the service account's private key JSON file was
+      downloaded to your computer. Make a note of the file name and where your
+      browser saves it.
+      <strong
+        >You'll need it later while creating an asset for the connector
+        (service_account_credentials).</strong
+      >
+    </p>
+  </li>
+  <li>Click <strong>Close</strong>.</li>
+  <li>At the top, click <strong>Permissions</strong>.</li>
+  <li>Click Grant Access</li>
+  <li>
+    In <strong>Add Principals</strong> field, enter the service account email
+    ID.
+  </li>
+  <li>In <strong>Assign roles</strong> select Service Account Admin</li>
+  <li>If the google sheet you are trying to modify is not created from the same service account then open the sheet&nbsp;&gt;&nbsp;Share&nbsp;&gt;&nbsp;Enter the service account email ID&nbsp;&gt;&nbsp;give editor access and click on done before using this app.</li>
+</ol>
