@@ -15,7 +15,7 @@
   "utctime_updated": "2024-06-11T03:16:46.151293Z",
   "package_name": "phantom_googlesheets",
   "main_module": "googlesheets_connector.py",
-  "min_phantom_version": "6.0.0.114895",
+  "min_phantom_version": "6.2.1",
   "app_wizard_version": "1.0.0",
   "configuration": {
     "service_account_email": {
@@ -50,7 +50,7 @@
       "versions": "EQ(*)"
     },
     {
-      "action": "add_new_rows",
+      "action": "add new rows",
       "identifier": "add_new_rows",
       "description": "Use this action to add new rows to the sheet",
       "verbose": "This action can be used to append new rows to the sheet.",
@@ -144,7 +144,7 @@
       "versions": "EQ(*)"
     },
     {
-      "action": "create_spreadsheet",
+      "action": "create spreadsheet",
       "identifier": "create_spreadsheet",
       "description": "create a new spreadsheet and share with users",
       "verbose": "This action will create a new google sheet in the service account's root and share it with the users.",
