@@ -7,25 +7,20 @@
 # Python 3 Compatibility imports
 from __future__ import print_function, unicode_literals
 
+import json
+import re
+
 # Phantom App imports
 import phantom.app as phantom
-from phantom.base_connector import BaseConnector
+import requests
+from google.oauth2 import service_account
+from googleapiclient.discovery import build
 from phantom.action_result import ActionResult
+from phantom.base_connector import BaseConnector
 
 # Usage of the consts file is recommended
 from googlesheets_consts import *
-import requests
-import json
-from bs4 import BeautifulSoup
 
-from google.oauth2 import service_account
-from google.auth.transport.requests import Request
-from google.oauth2.credentials import Credentials
-from google_auth_oauthlib.flow import InstalledAppFlow
-from googleapiclient.discovery import build
-from googleapiclient.errors import HttpError
-
-import re
 
 class RetVal(tuple):
 
@@ -48,35 +43,35 @@ class GoogleSheetsConnector(BaseConnector):
         self._base_url = None
         self._service_email = None
         self._service_creds = None
-        
+
     def _create_service(self, action_result, service_type, service_version, scope):
         if all(val is not None for val in [service_type, service_version, scope]):
             credentials = service_account.Credentials.from_service_account_info(self._service_creds, scopes=scope)
             try:
                 service = build(service_type, service_version, credentials=credentials)
-            except Exception as e:
+            except Exception:
                 msg = SERVICE_CREATION_ERROR.format(service_type, service_version)
                 self.save_progress(msg)
                 return RetVal(action_result.set_status(phantom.APP_ERROR, msg))
-            
+
             self.save_progress(SERVICE_SUCCESS.format(service_type))
             return RetVal(phantom.APP_SUCCESS, service)
         else:
             self.save_progress(SERVICE_PARAM_MISSING_ERROR)
             return RetVal(action_result.set_status(phantom.APP_ERROR, SERVICE_PARAM_MISSING_ERROR))
-    
+
     def _handle_test_connectivity(self, param):
         # Add an action result object to self (BaseConnector) to represent the action for this param
         action_result = self.add_action_result(ActionResult(dict(param)))
         scope = [IAM_SCOPE]
         self.save_progress("Getting service account details.")
-        ret_val, service = self._create_service(action_result, "iam","v1",scope)
-        
+        ret_val, service = self._create_service(action_result, "iam", "v1", scope)
+
         if phantom.is_fail(ret_val):
             self.save_progress(TEST_CONNECTIVITY_FAILED)
             return action_result.get_status()
-        
-        service_acc_details = service.projects().serviceAccounts().get(name=PROJECT_NAME_PATH + self._service_email).execute()
+
+        _ = service.projects().serviceAccounts().get(name=PROJECT_NAME_PATH + self._service_email).execute()
         # Return success
         self.save_progress(TEST_CONNECTIVITY_PASSED)
         return action_result.set_status(phantom.APP_SUCCESS)
@@ -86,41 +81,41 @@ class GoogleSheetsConnector(BaseConnector):
         action_result = self.add_action_result(ActionResult(dict(param)))
         sheet_id = param['google_sheet_id']
         try:
-            rows = eval(param['rows']) 
-        except Exception as e:
+            rows = eval(param['rows'])
+        except Exception:
             return RetVal(action_result.set_status(phantom.APP_ERROR, INVALID_ROW_DATA))
-        
+
         range_name = param['sheet_name']
         scope = [SHEETS_SCOPE]
-        ret_val, service = self._create_service(action_result, "sheets","v4",scope)
-        
+        ret_val, service = self._create_service(action_result, "sheets", "v4", scope)
+
         if phantom.is_fail(ret_val):
             return action_result.get_status()
-        
-        sheet = service.spreadsheets()
+
+        _ = service.spreadsheets()
         try:
             response = service.spreadsheets().values().append(
                 spreadsheetId=sheet_id,
                 range=range_name,
-                body = {
+                body={
                     "majorDimension": "ROWS",
                     "values": rows
                 },
                 valueInputOption="USER_ENTERED").execute()
-        except Exception as e:
+        except Exception:
             return RetVal(action_result.set_status(phantom.APP_ERROR, ADD_ROWS_ERROR.format(range_name)))
-        
+
         msg = ADD_ROWS_SUCCESS.format(response['updates']['updatedRows'])
         self.save_progress(msg)
         action_result.add_data(response)
         return action_result.set_status(phantom.APP_SUCCESS, msg)
-     
+
     def _validate_email(self, email):
         pat = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,7}\b'
-        if re.match(pat,email):
+        if re.match(pat, email):
             return True
         return False
-    
+
     def _handle_create_spreadsheet(self, param):
         self.save_progress("In action handler for: {0}".format(self.get_action_identifier()))
         action_result = self.add_action_result(ActionResult(dict(param)))
@@ -132,27 +127,27 @@ class GoogleSheetsConnector(BaseConnector):
                 msg = INVALID_EMAIL.format(each)
                 self.save_progress(msg)
                 return RetVal(action_result.set_status(phantom.APP_ERROR, msg))
-            
-        ret_val, service = self._create_service(action_result, "sheets","v4",scope)
-        
+
+        ret_val, service = self._create_service(action_result, "sheets", "v4", scope)
+
         if phantom.is_fail(ret_val):
             return action_result.get_status()
-        
+
         spreadsheet = {
             'properties': {
                 'title': file_name
             }
         }
         try:
-            spreadsheet = service.spreadsheets().create(body=spreadsheet,fields='spreadsheetId').execute()
-        except Exception as e:
+            spreadsheet = service.spreadsheets().create(body=spreadsheet, fields='spreadsheetId').execute()
+        except Exception:
             return RetVal(action_result.set_status(phantom.APP_ERROR, SPREADSHEET_CREATE_FAILED.format(file_name)))
-        
-        ret_val, service = self._create_service(action_result, "drive","v3",scope)
-        
+
+        ret_val, service = self._create_service(action_result, "drive", "v3", scope)
+
         if phantom.is_fail(ret_val):
             return action_result.get_status()
-        
+
         for each in user_emails:
             permission_values = {
                 'type': param['permission_type'],
@@ -160,7 +155,7 @@ class GoogleSheetsConnector(BaseConnector):
                 'emailAddress': each
             }
             service.permissions().create(fileId=spreadsheet.get('spreadsheetId'), body=permission_values).execute()
-        
+
         action_result.add_data(spreadsheet)
         msg = SPREADSHEET_CREATE_SUCCESS.format(spreadsheet.get('spreadsheetId'))
         return action_result.set_status(phantom.APP_SUCCESS, msg)
