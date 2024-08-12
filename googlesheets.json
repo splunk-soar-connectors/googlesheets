@@ -45,7 +45,7 @@
           "versions": "EQ(*)"
       },
       {
-          "action": "add_new_rows",
+          "action": "add new rows",
           "identifier": "add_new_rows",
           "description": "Use this action to add new rows to the sheet",
           "verbose": "This action can be used to append new rows to the sheet.",
@@ -122,7 +122,7 @@
           "versions": "EQ(*)"
       },
       {
-          "action": "create_spreadsheet",
+          "action": "create spreadsheet",
           "identifier": "create_spreadsheet",
           "description": "Create a new spreadsheet and share with users",
           "verbose": "This action will create a new google sheet in the service account's root and share it with the users.",
