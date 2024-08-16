@@ -22,15 +22,13 @@
           "description": "Enter service account email id",
           "data_type": "string",
           "required": true,
-          "order": 0,
-          "id": 0
+          "order": 0
       },
       "service_account_credentials": {
           "description": "Paste your service account credentials here",
           "data_type": "password",
           "required": true,
-          "order": 1,
-          "id": 1
+          "order": 1
       }
   },
   "actions": [
@@ -56,22 +54,19 @@
                   "description": "ID of the google sheet. This can be found in the URL",
                   "data_type": "string",
                   "required": true,
-                  "order": 0,
-                  "id": 1
+                  "order": 0
               },
               "rows": {
                   "description": "List of list of rows to be added. Example: [[\"row_1_col_1_data\",\"row_1_col_2_data\"],[\"row_2_col_1_data\",\"row_2_col_2_data\"], ...]",
                   "data_type": "string",
                   "required": true,
-                  "order": 1,
-                  "id": 2
+                  "order": 1
               },
               "sheet_name": {
                   "description": "Name of the sheet. This can be found in the bottom tabs of the google sheet",
                   "data_type": "string",
                   "required": true,
-                  "order": 2,
-                  "id": 3
+                  "order": 2
               }
           },
           "output": [
@@ -133,15 +128,13 @@
                   "description": "Enter name of the spreadsheet",
                   "data_type": "string",
                   "required": true,
-                  "order": 0,
-                  "id": 1
+                  "order": 0
               },
               "user_emails": {
                   "description": "Give a comma seperated list of email IDs to share the file with",
                   "data_type": "string",
                   "required": true,
-                  "order": 1,
-                  "id": 2
+                  "order": 1
               },
               "permission_type": {
                   "description": "Select permission type to give to users",
@@ -152,8 +145,7 @@
                       "group",
                       "anyone"
                   ],
-                  "order": 2,
-                  "id": 3
+                  "order": 2
               },
               "role": {
                   "description": "Select role to be assigned",
@@ -166,8 +158,7 @@
                       "commenter",
                       "reader"
                   ],
-                  "order": 3,
-                  "id": 4
+                  "order": 3
               }
           },
           "output": [
