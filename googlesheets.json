@@ -11,7 +11,7 @@
   "product_version_regex": ".*",
   "publisher": "Splunk Community",
   "license": "Copyright (c) Splunk, 2024",
-  "app_version": "3.6.0",
+  "app_version": "1.0.0",
   "utctime_updated": "2024-06-11T03:16:46.151293Z",
   "package_name": "phantom_googlesheets",
   "main_module": "googlesheets_connector.py",
@@ -237,9 +237,6 @@
   "pip3_dependencies": {
       "wheel": [],
       "pypi": [
-          {
-              "module": "urllib3==1.26.15"
-          },
           {
               "module": "google-api-python-client"
           },
