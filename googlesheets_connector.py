@@ -1,6 +1,6 @@
 # File: googlesheets_connector.py
 
-# Copyright (c) Splunk, 2024
+# Copyright (c) Splunk, 2024-2025
 
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,7 +14,6 @@
 # and limitations under the License.
 
 # Python 3 Compatibility imports
-from __future__ import print_function, unicode_literals
 
 import json
 import re
@@ -32,17 +31,14 @@ from googlesheets_consts import *
 
 
 class RetVal(tuple):
-
     def __new__(cls, val1, val2=None):
         return tuple.__new__(RetVal, (val1, val2))
 
 
 class GoogleSheetsConnector(BaseConnector):
-
     def __init__(self):
-
         # Call the BaseConnectors init first
-        super(GoogleSheetsConnector, self).__init__()
+        super().__init__()
 
         self._state = None
 
@@ -86,15 +82,15 @@ class GoogleSheetsConnector(BaseConnector):
         return action_result.set_status(phantom.APP_SUCCESS)
 
     def _handle_add_new_rows(self, param):
-        self.save_progress("In action handler for: {0}".format(self.get_action_identifier()))
+        self.save_progress(f"In action handler for: {self.get_action_identifier()}")
         action_result = self.add_action_result(ActionResult(dict(param)))
-        sheet_id = param['google_sheet_id']
+        sheet_id = param["google_sheet_id"]
         try:
-            rows = eval(param['rows'])
+            rows = eval(param["rows"])
         except Exception:
             return RetVal(action_result.set_status(phantom.APP_ERROR, INVALID_ROW_DATA))
 
-        range_name = param['sheet_name']
+        range_name = param["sheet_name"]
         scope = [SHEETS_SCOPE]
         ret_val, service = self._create_service(action_result, "sheets", "v4", scope)
 
@@ -103,34 +99,34 @@ class GoogleSheetsConnector(BaseConnector):
 
         _ = service.spreadsheets()
         try:
-            response = service.spreadsheets().values().append(
-                spreadsheetId=sheet_id,
-                range=range_name,
-                body={
-                    "majorDimension": "ROWS",
-                    "values": rows
-                },
-                valueInputOption="USER_ENTERED").execute()
+            response = (
+                service.spreadsheets()
+                .values()
+                .append(
+                    spreadsheetId=sheet_id, range=range_name, body={"majorDimension": "ROWS", "values": rows}, valueInputOption="USER_ENTERED"
+                )
+                .execute()
+            )
         except Exception:
             return RetVal(action_result.set_status(phantom.APP_ERROR, ADD_ROWS_ERROR.format(range_name)))
 
-        msg = ADD_ROWS_SUCCESS.format(response['updates']['updatedRows'])
+        msg = ADD_ROWS_SUCCESS.format(response["updates"]["updatedRows"])
         self.save_progress(msg)
         action_result.add_data(response)
         return action_result.set_status(phantom.APP_SUCCESS, msg)
 
     def _validate_email(self, email):
-        pat = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,7}\b'
+        pat = r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,7}\b"
         if re.match(pat, email):
             return True
         return False
 
     def _handle_create_spreadsheet(self, param):
-        self.save_progress("In action handler for: {0}".format(self.get_action_identifier()))
+        self.save_progress(f"In action handler for: {self.get_action_identifier()}")
         action_result = self.add_action_result(ActionResult(dict(param)))
         scope = [SHEETS_SCOPE, DRIVE_AUTH_SCOPE]
-        file_name = param['file_name']
-        user_emails = param['user_emails'].replace(" ", "").split(",")
+        file_name = param["file_name"]
+        user_emails = param["user_emails"].replace(" ", "").split(",")
         for each in user_emails:
             if not self._validate_email(each):
                 msg = INVALID_EMAIL.format(each)
@@ -142,13 +138,9 @@ class GoogleSheetsConnector(BaseConnector):
         if phantom.is_fail(ret_val):
             return action_result.get_status()
 
-        spreadsheet = {
-            'properties': {
-                'title': file_name
-            }
-        }
+        spreadsheet = {"properties": {"title": file_name}}
         try:
-            spreadsheet = service.spreadsheets().create(body=spreadsheet, fields='spreadsheetId').execute()
+            spreadsheet = service.spreadsheets().create(body=spreadsheet, fields="spreadsheetId").execute()
         except Exception:
             return RetVal(action_result.set_status(phantom.APP_ERROR, SPREADSHEET_CREATE_FAILED.format(file_name)))
 
@@ -158,15 +150,11 @@ class GoogleSheetsConnector(BaseConnector):
             return action_result.get_status()
 
         for each in user_emails:
-            permission_values = {
-                'type': param['permission_type'],
-                'role': param['role'],
-                'emailAddress': each
-            }
-            service.permissions().create(fileId=spreadsheet.get('spreadsheetId'), body=permission_values).execute()
+            permission_values = {"type": param["permission_type"], "role": param["role"], "emailAddress": each}
+            service.permissions().create(fileId=spreadsheet.get("spreadsheetId"), body=permission_values).execute()
 
         action_result.add_data(spreadsheet)
-        msg = SPREADSHEET_CREATE_SUCCESS.format(spreadsheet.get('spreadsheetId'))
+        msg = SPREADSHEET_CREATE_SUCCESS.format(spreadsheet.get("spreadsheetId"))
         return action_result.set_status(phantom.APP_SUCCESS, msg)
 
     def handle_action(self, param):
@@ -177,13 +165,13 @@ class GoogleSheetsConnector(BaseConnector):
 
         self.debug_print("action_id", self.get_action_identifier())
 
-        if action_id == 'add_new_rows':
+        if action_id == "add_new_rows":
             ret_val = self._handle_add_new_rows(param)
 
-        if action_id == 'create_spreadsheet':
+        if action_id == "create_spreadsheet":
             ret_val = self._handle_create_spreadsheet(param)
 
-        if action_id == 'test_connectivity':
+        if action_id == "test_connectivity":
             ret_val = self._handle_test_connectivity(param)
 
         return ret_val
@@ -205,9 +193,9 @@ class GoogleSheetsConnector(BaseConnector):
         optional_config_name = config.get('optional_config_name')
         """
 
-        self._base_url = config.get('base_url')
-        self._service_email = config.get('service_account_email')
-        cred_str = config.get('service_account_credentials').replace("'", "\"")
+        self._base_url = config.get("base_url")
+        self._service_email = config.get("service_account_email")
+        cred_str = config.get("service_account_credentials").replace("'", '"')
         self._service_creds = json.loads(cred_str)
         return phantom.APP_SUCCESS
 
@@ -223,10 +211,10 @@ def main():
 
     argparser = argparse.ArgumentParser()
 
-    argparser.add_argument('input_test_json', help='Input Test JSON file')
-    argparser.add_argument('-u', '--username', help='username', required=False)
-    argparser.add_argument('-p', '--password', help='password', required=False)
-    argparser.add_argument('-v', '--verify', action='store_true', help='verify', required=False, default=False)
+    argparser.add_argument("input_test_json", help="Input Test JSON file")
+    argparser.add_argument("-u", "--username", help="username", required=False)
+    argparser.add_argument("-p", "--password", help="password", required=False)
+    argparser.add_argument("-v", "--verify", action="store_true", help="verify", required=False, default=False)
 
     args = argparser.parse_args()
     session_id = None
@@ -236,31 +224,31 @@ def main():
     verify = args.verify
 
     if username is not None and password is None:
-
         # User specified a username but not a password, so ask
         import getpass
+
         password = getpass.getpass("Password: ")
 
     if username and password:
         try:
-            login_url = GoogleSheetsConnector._get_phantom_base_url() + '/login'
+            login_url = GoogleSheetsConnector._get_phantom_base_url() + "/login"
 
             print("Accessing the Login page")
             r = requests.get(login_url, verify=verify)
-            csrftoken = r.cookies['csrftoken']
+            csrftoken = r.cookies["csrftoken"]
 
             data = dict()
-            data['username'] = username
-            data['password'] = password
-            data['csrfmiddlewaretoken'] = csrftoken
+            data["username"] = username
+            data["password"] = password
+            data["csrfmiddlewaretoken"] = csrftoken
 
             headers = dict()
-            headers['Cookie'] = 'csrftoken=' + csrftoken
-            headers['Referer'] = login_url
+            headers["Cookie"] = "csrftoken=" + csrftoken
+            headers["Referer"] = login_url
 
             print("Logging into Platform to get the session id")
             r2 = requests.post(login_url, verify=verify, data=data, headers=headers)
-            session_id = r2.cookies['sessionid']
+            session_id = r2.cookies["sessionid"]
         except Exception as e:
             print("Unable to get session id from the platform. Error: " + str(e))
             sys.exit(1)
@@ -274,8 +262,8 @@ def main():
         connector.print_progress_message = True
 
         if session_id is not None:
-            in_json['user_session_token'] = session_id
-            connector._set_csrf_info(csrftoken, headers['Referer'])
+            in_json["user_session_token"] = session_id
+            connector._set_csrf_info(csrftoken, headers["Referer"])
 
         ret_val = connector._handle_action(json.dumps(in_json), None)
         print(json.dumps(json.loads(ret_val), indent=4))
@@ -283,5 +271,5 @@ def main():
     sys.exit(0)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
