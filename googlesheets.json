@@ -234,17 +234,6 @@
             "versions": "EQ(*)"
         }
     ],
-    "pip3_dependencies": {
-        "wheel": [],
-        "pypi": [
-            {
-                "module": "google-api-python-client"
-            },
-            {
-                "module": "google_auth_oauthlib"
-            }
-        ]
-    },
     "custom_made": true,
     "copied_from_id": 189,
     "copied_from_version": "3.5.0",
