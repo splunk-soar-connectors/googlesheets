@@ -7,7 +7,7 @@
     "logo": "logo_googlesheets.svg",
     "logo_dark": "logo_googlesheets_dark.svg",
     "product_name": "Google Sheets",
-    "python_version": "3",
+    "python_version": ["3.9", "3.13"],
     "product_version_regex": ".*",
     "publisher": "Splunk Community",
     "license": "Copyright (c) Splunk, 2024-2025",
