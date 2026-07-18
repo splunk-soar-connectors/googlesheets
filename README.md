@@ -1,9 +1,9 @@
 # Google Sheets
 
-Publisher: Splunk Community \
-Connector Version: 1.0.1 \
-Product Vendor: Google \
-Product Name: Google Sheets \
+Publisher: Splunk Community <br>
+Connector Version: 1.0.1 <br>
+Product Vendor: Google <br>
+Product Name: Google Sheets <br>
 Minimum Product Version: 6.2.1
 
 This app allows various file manipulation actions to be performed on Google Sheets
@@ -78,15 +78,15 @@ VARIABLE | REQUIRED | TYPE | DESCRIPTION
 
 ### Supported Actions
 
-[test connectivity](#action-test-connectivity) - Validate the asset configuration for connectivity using supplied configuration \
-[add new rows](#action-add-new-rows) - Use this action to add new rows to the sheet \
+[test connectivity](#action-test-connectivity) - Validate the asset configuration for connectivity using supplied configuration <br>
+[add new rows](#action-add-new-rows) - Use this action to add new rows to the sheet <br>
 [create spreadsheet](#action-create-spreadsheet) - Create a new spreadsheet and share with users
 
 ## action: 'test connectivity'
 
 Validate the asset configuration for connectivity using supplied configuration
 
-Type: **test** \
+Type: **test** <br>
 Read only: **True**
 
 #### Action Parameters
@@ -101,7 +101,7 @@ No Output
 
 Use this action to add new rows to the sheet
 
-Type: **generic** \
+Type: **generic** <br>
 Read only: **False**
 
 This action can be used to append new rows to the sheet.
@@ -130,7 +130,7 @@ summary.total_objects_successful | numeric | | |
 
 Create a new spreadsheet and share with users
 
-Type: **generic** \
+Type: **generic** <br>
 Read only: **False**
 
 This action will create a new google sheet in the service account's root and share it with the users.
@@ -162,7 +162,7 @@ ______________________________________________________________________
 
 Auto-generated Splunk SOAR Connector documentation.
 
-Copyright 2025 Splunk Inc.
+Copyright 2026 Splunk Inc.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
