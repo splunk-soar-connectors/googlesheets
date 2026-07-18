@@ -86,8 +86,11 @@ class GoogleSheetsConnector(BaseConnector):
         action_result = self.add_action_result(ActionResult(dict(param)))
         sheet_id = param["google_sheet_id"]
         try:
-            rows = eval(param["rows"])
-        except Exception:
+            rows = json.loads(param["rows"])
+        except (TypeError, json.JSONDecodeError):
+            return RetVal(action_result.set_status(phantom.APP_ERROR, INVALID_ROW_DATA))
+
+        if not isinstance(rows, list) or not all(isinstance(row, list) for row in rows):
             return RetVal(action_result.set_status(phantom.APP_ERROR, INVALID_ROW_DATA))
 
         range_name = param["sheet_name"]
