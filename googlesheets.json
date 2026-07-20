@@ -7,10 +7,10 @@
     "logo": "logo_googlesheets.svg",
     "logo_dark": "logo_googlesheets_dark.svg",
     "product_name": "Google Sheets",
-    "python_version": "3",
+    "python_version": "3.9, 3.13",
     "product_version_regex": ".*",
     "publisher": "Splunk Community",
-    "license": "Copyright (c) Splunk, 2024-2025",
+    "license": "Copyright (c) Splunk, 2024-2026",
     "app_version": "1.0.1",
     "utctime_updated": "2024-06-11T03:16:46.151293Z",
     "package_name": "phantom_googlesheets",
@@ -245,12 +245,10 @@
             }
         ]
     },
-    "custom_made": true,
-    "copied_from_id": 189,
-    "copied_from_version": "3.5.0",
-    "directory": "googlesheets_37ed707d-109b-40b7-be61-d81868572473",
-    "version": 1,
-    "appname": "-",
-    "executable": "spawn3",
-    "disabled": false
+    "pip39_dependencies": {
+        "wheel": []
+    },
+    "pip313_dependencies": {
+        "wheel": []
+    }
 }
