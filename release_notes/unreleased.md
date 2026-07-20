@@ -1,3 +1,1 @@
 **Unreleased**
-
-* Parse new rows as JSON and reject values that are not a list of lists.

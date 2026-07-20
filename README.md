@@ -1,7 +1,7 @@
 # Google Sheets
 
 Publisher: Splunk Community <br>
-Connector Version: 1.0.1 <br>
+Connector Version: 1.0.2 <br>
 Product Vendor: Google <br>
 Product Name: Google Sheets <br>
 Minimum Product Version: 6.2.1
